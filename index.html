@@ -6,9 +6,6 @@
     <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
     <script src="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.js"></script>
   </head>
-
-
-
   <style>
       #report {
         margin: 20px 0 55px;
@@ -61,9 +58,11 @@
         width: 100px;
         display: inline-block;
       }
-      .converted {
+      .converted, .dropped {
         text-align: center;
         font-weight: bold;
+      }
+      .converted {
         width: 60px;
         margin: 0 auto;
         background-color: #65afe7;
@@ -71,6 +70,17 @@
       .converted.first {
         -webkit-border-radius: 3px 3px 0 0;
         border-radius: 3px 3px 0 0;
+      }
+      .dropped {
+        width: 60px;
+        margin: 0 auto;
+        background-color: #e0e3ed;
+        -webkit-border-radius: 3px 3px 0 0;
+        border-radius: 3px 3px 0 0;
+        cursor: pointer;
+      }
+      .dropped:hover {
+        background-color: #cfd3e3;
       }
       .column-label {
         margin-bottom: 8px;
@@ -92,40 +102,31 @@
         background-image: -webkit-linear-gradient(#f7f8fb,#f0f2f5);
         background-image: linear-gradient(#f7f8fb,#f0f2f5);
       }
-
     </style>
-
-
-
-
 
   <body class="mixpanel-platform-body">
     <div class="mixpanel-platform-section">
       <div id="dateSelect" style="float: right;"></div>
-      <div id="oneR" class="mixpanel-platform-label" style="margin-right: 70px; float: right;">Date</div>
+      <div id="oneR" class="mixpanel-platform-label" style="margin-right: 65px; float: right;">Date</div>
       <div id="distinctIdSelect" style="margin-right: 100px; float: right;"></div>
       <div id="oneC" class="mixpanel-platform-label" style="margin-right: 10px; float: right;">ID</div>
       <div id="oneL" class="mixpanel-platform-label" style="margin-left: 10px;">1.</div>
       <div id="eventSelect1" style="float: left;"></div>
       <div style="clear: both;"></div>
-      <div id="intervalSelect" style="float: right;"></div>
-      <div id="twoR" class="mixpanel-platform-label" style="margin-right: 10px; float: right;">Interval</div>
+      <div id="orderSelect" style="float: right;"></div>
+      <div id="twoR" class="mixpanel-platform-label" style="margin-right: 10px; float: right;">Order</div>
       <div id="timeSelect" style="margin-right: 100px; float: right;"></div>
       <div id="twoC" class="mixpanel-platform-label" style="margin-right: 10px; float: right;">Time</div>
       <div id="twoL" class="mixpanel-platform-label" style="margin-left: 10px;">2.</div>
       <div id="eventSelect2" style="float: left;"></div>
       <div style="clear: both;"></div>
-      <div id="unitSelect" style="float: right;"></div>
-      <div id="threeR" class="mixpanel-platform-label" style="margin-right: 10px; float: right;">Unit</div>
+      <div id="eventSelect" style="float: right;"></div>
+      <div id="threeR" class="mixpanel-platform-label" style="margin-right: 10px; float: right;">#Events</div>
       <div id="attemptSelect" style="margin-right: 100px; float: right;"></div>
       <div id="threeC" class="mixpanel-platform-label" style="margin-right: 10px; float: right;">Count</div>
       <div id="threeL" class="mixpanel-platform-label" style="margin-left: 10px; display: none;">3.</div>
       <div id="eventSelect3" style="float: left; display: none;"></div>
       <div style="clear: both;"></div>
-      <div id="eventSelect" style="float: right;"></div>
-      <div id="fourR" class="mixpanel-platform-label" style="margin-right: 10px; float: right;">Events</div>
-      <div id="orderSelect" style="margin-right: 100px; float: right;"></div>
-      <div id="fourC" class="mixpanel-platform-label" style="margin-right: 10px; float: right;">Order</div>
       <div id="fourL" class="mixpanel-platform-label" style="margin-left: 10px; display: none;">4.</div>
       <div id="eventSelect4" style="float: left; display: none;"></div>
       <div style="clear: both;"></div>
@@ -160,10 +161,11 @@
       </div>
     </div>
 
-
     <script>
 
-      MP.api.setCredentials("7a66766fb54b8f77ba03ada28b0bfb1f");
+      //debug
+      //MP.api.setCredentials("7a66766fb54b8f77ba03ada28b0bfb1f");
+      MP.api.setCredentials("fb5cd548015d767999059038755ce6b3");
 
       var dateSelect  = $('#dateSelect').MPDatepicker();
       var eventPicker1 = $('#eventSelect1').MPEventSelect();
@@ -173,17 +175,17 @@
       var eventPicker5 = $('#eventSelect5').MPEventSelect();
       var propSelect  = $('#propSelect').MPPropertySelect();
       
-      var intervalOptions = {
+      /*var intervalOptions = {
         items: [
           {label: '-- Select interval length --', value: 0},
-          {label: '1', value: 1},
-          {label: '3', value: 3},
-          {label: '5', value: 5},
-          {label: '7', value: 7},
-          {label: '14', value: 14},
-          {label: '30', value: 30},
-          {label: '60', value: 60},
-          {label: '90', value: 90}
+          {label: '1 day', value: 1},
+          {label: '3 day', value: 3},
+          {label: '5 day', value: 5},
+          {label: '7 day', value: 7},
+          {label: '14 day', value: 14},
+          {label: '30 day', value: 30},
+          {label: '60 day', value: 60},
+          {label: '90 day', value: 90}
         ]
       };
       
@@ -198,7 +200,7 @@
         ]
       };
       
-      var unitPicker = $('#unitSelect').MPSelect(unitOptions);
+      var unitPicker = $('#unitSelect').MPSelect(unitOptions);*/
       
       var eventsOptions = {
         items: [
@@ -211,7 +213,7 @@
       };
 
       var eventsPicker = $('#eventSelect').MPSelect(eventsOptions);
-      
+
       var idOptions = {
         items: [
           //{label: '-- Select identifier to use --', value: 0},
@@ -219,8 +221,20 @@
           // add other properties from dropdown somehow
         ]
       };
-      
-      var distinctIdPicker = $('#distinctIdSelect').MPSelect(idOptions);
+
+      MP.api.topProperties('App launch').done(function(results) {
+        var props = Object.keys(results.values());
+        for(i=0; i<props.length; i++) {
+          idOptions.items.push({label: props[i], value: props[i]});
+        }
+        $('#distinctIdSelect').empty();
+        distinctIdPicker = $('#distinctIdSelect').MPSelect(idOptions);
+        distinctIdPicker.on('change', runQuery);
+        runQuery();
+      });
+
+      //var distinctIdPicker = $('#distinctIdSelect').MPSelect(idOptions);
+      //console.log(distinctIdPicker);
 
       var timeOptions = {
         items: [
@@ -234,8 +248,8 @@
 
       var attemptOptions = {
         items: [
-          //{label: '-- Select count to use --', value: 0},
-          //{label: 'Uniques', value: 'unique'},
+          {label: '-- Select count to use --', value: 0},
+          {label: 'Uniques', value: 'unique'},
           {label: 'Transactional', value: 'total'},
         ]
       };
@@ -244,8 +258,8 @@
 
       var orderOptions = {
         items: [
-          //{label: '-- Select if ordered --', value: 0},
-          //{label: 'Ordered', value: 'ordered'},
+          {label: '-- Select if ordered --', value: 0},
+          {label: 'Ordered', value: 'ordered'},
           {label: 'Unordered (Count)', value: 'count'},
         ]
       };
@@ -259,8 +273,8 @@
 
         // create variables for the values in the dropdowns
         var dateRange = dateSelect.MPDatepicker('value'),
-            interval = intervalPicker.MPSelect('value'),
-            unit = unitPicker.MPSelect('value'),
+            //interval = intervalPicker.MPSelect('value'),
+            //unit = unitPicker.MPSelect('value'),
             eventsNum = eventsPicker.MPSelect('value'),
             id = distinctIdPicker.MPSelect('value'),
             time = timePicker.MPSelect('value'),
@@ -281,8 +295,6 @@
         eventsAll.push(eventName4);
         eventsAll.push(eventName5);
 
-        console.log(eventsNum);
-
         // find out if a valid sequence of events has been selected
         var eventsValid = 0;
         var eventsJQL = [];
@@ -300,78 +312,87 @@
           eventsJQL.push(eventsAll[i]);
         }
 
-        console.log(eventsValid);
-        console.log(eventsJQL);
-
         // this condition represents that every dropdown has been valid and selected
-        if(dateRange && interval && unit && eventsNum && id && time && attempt && order && eventsValid > 1) {
-          console.log("We are locked and loaded.");
+        if(dateRange && eventsNum && id && time && attempt && order && eventsValid > 1) {
+          if(id == 'distinct_id') {
+            var params = {
+              'from_date': dateRange.from.toISOString().substring(0, 10),
+              'to_date': dateRange.to.toISOString().substring(0, 10),
+              'events': eventsJQL
+            };
+          } else {
+            var params = {
+              'from_date': dateRange.from.toISOString().substring(0, 10),
+              'to_date': dateRange.to.toISOString().substring(0, 10),
+              'events': eventsJQL,
+              'prop': id
+            };
+          }
 
-          var params = {
-            'from_date': dateRange.from.toISOString().substring(0, 10),
-            'to_date': dateRange.to.toISOString().substring(0, 10),
-            'events': eventsJQL
-          };
+          console.log(id);
 
-          console.log(params);
+          var sortOrder = false;
 
           // want to decide upon a query based on the inputted dropdown values
           // NOTE: custom time property not currently included
           if(id == 'distinct_id' && time == 'time' && attempt == 'unique' && order == 'ordered') { // standard funnel
-            var script = document.getElementById('funnel').innerHTML; 
+            var script = document.getElementById('funnel-query').innerHTML; 
           } else if(id == 'distinct_id' && time == 'time' && attempt == 'unique' && order !== 'ordered') { // unique event counts of each event in funnel
             var script = document.getElementById('funnel-unique').innerHTML;
+            sortOrder = true;
           } else if(id == 'distinct_id' && time == 'time' && attempt !== 'unique' && order == 'ordered') { // transactional funnel
             var script = document.getElementById('funnel-transactional').innerHTML;
           } else if(id == 'distinct_id' && time == 'time' && attempt !== 'unique' && order !== 'ordered') { // total event counts of each event in funnel
             var script = document.getElementById('funnel-total').innerHTML;
+            sortOrder = true;
           } else if(id !== 'distinct_id' && time == 'time' && attempt == 'unique' && order == 'ordered') { // standard funnel by custom id
             var script = document.getElementById('funnel-custom').innerHTML;
           } else if(id !== 'distinct_id' && time == 'time' && attempt == 'unique' && order !== 'ordered') { // unique event counts by custom id of each event in funnel
             var script = document.getElementById('funnel-custom-unique').innerHTML;
+            sortOrder = true;
           } else if(id !== 'distinct_id' && time == 'time' && attempt !== 'unique' && order == 'ordered') { // transactional funnel by custom id
             var script = document.getElementById('funnel-custom-transactional').innerHTML;
           } else if(id !== 'distinct_id' && time == 'time' && attempt !== 'unique' && order !== 'ordered') { // total event counts by custom id of each event in funnel
-            var script = document.getElementById('funnel-custom-total').innerHTML;
+            var script = document.getElementById('funnel-total').innerHTML;
+            sortOrder = true;
           }
 
+          console.log(params);
+          console.log(script);
+
           MP.api.jql(script, params).done(function(results) {
-            console.log(results);
-            //rawResult = results[0];
             var jqlResult = [];
+            var counts = {};
             var j = 0;
+            var maxCount = 0;
+            console.log(results);
             _.each(eventsJQL, function(item) {
               jqlResult[j] = {};
               jqlResult[j].count = results[0][item];
               jqlResult[j].step = item;
+              if(results[0][item] > maxCount) {
+                maxCount = j;
+              }
               j++;
             });
-            /*_.each(results, function(item) {
-              console.log(item);
-              jqlResult[j] = {};
-              jqlResult[j].count = item.value;
-              jqlResult[j].step = item;
-              j++;
-            });*/
-            console.log(jqlResult);
-
+            if(sortOrder) {
+              var ratio = calculateGraphRatio(jqlResult[maxCount].count);
+            } else {
+              var ratio = calculateGraphRatio(jqlResult[0].count);
+            }
             for (var i = 0; i < eventsJQL.length; i++) {
               var first = i == 0 ? true : false;
-              console.log(jqlResult[i]);
-              console.log(jqlResult[i].count);
               if (first) {
-                addFunnelStep(eventsJQL[i], jqlResult[i].count, first) //, 0, first);
+                addFunnelStep(jqlResult[i].step, jqlResult[i].count, 0, first, ratio);
               } else {
-                addFunnelStep(eventsJQL[i], jqlResult[i].count, first) //, jqlResult[i-1].count-jqlResult[i].count, first);
+                addFunnelStep(jqlResult[i].step, jqlResult[i].count, jqlResult[i-1].count-jqlResult[i].count, first, ratio);
               }
             }
             $('#report').show();
           });
 
-
-
-        } else { // query is going to fail due to missing inputs
-          console.log("Not Ready yet :(");
+        } else {
+          // query is going to fail due to missing inputs
         }
       }
 
@@ -379,26 +400,17 @@
       var funnelGraph = $('#funnel');
       var ratio = calculateGraphRatio();
       
-      function addFunnelStep(eventName, converted, first) {
+      function addFunnelStep(eventName, converted, dropped, first, ratio) {
         var first = first ? 'first' : '';
         // set graph height ratio and y-axis labels
         if (first == 'first') {
-          console.log(first);
-          console.log(converted);
-          ratio = calculateGraphRatio(converted);
           var increment = converted / 6;
-          console.log(ratio);
           for (var i = 1; i <=6; i++) {
             $('.label:nth-child(' + i + ')').text(kFormatter(converted - ((i-1) * increment)));
           }
         }
-        console.log(eventName);
-        console.log(converted);
-        //console.log(dropped);
-        console.log(first);
         // append converted and dropped sections of funnel bar, event label
-        var dropped = 50; //first ? '' : dropped;
-        console.log(dropped);
+        var dropped = first ? '' : dropped;
         var funnelStep = $('<div class="funnel-step"></div>').appendTo(funnelGraph);
         $('<div class="dropped">' + dropped + '</div>').css({'height': dropped*ratio + 'px', 'line-height': dropped*ratio + 'px'}).appendTo(funnelStep);
         $('<div class="converted">' + converted + '</div>').css({'height': converted*ratio + 'px', 'line-height': converted*ratio + 'px'}).appendTo(funnelStep).addClass(first);
@@ -407,12 +419,7 @@
       
       function calculateGraphRatio(count) {
         var count = count || 1;
-        var total = $('#graph').height();
-        //total = window.height(); 
-        console.log('graph');
-        console.log($('#graph'));
-        console.log(total);
-        console.log(count);
+        var total = $('#graph').height() || 336;
         return total/count;
       }
 
@@ -421,17 +428,17 @@
       }
 
       // re-run when fields are changed
-      intervalPicker.on('change', runQuery);
-      unitPicker.on('change', runQuery);
+      //intervalPicker.on('change', runQuery);
+      //unitPicker.on('change', runQuery);
       dateSelect.on('change', runQuery);
-      distinctIdPicker.on('change', runQuery);
       timePicker.on('change', runQuery);
       attemptPicker.on('change', runQuery);
       orderPicker.on('change', runQuery);
       eventPicker1.on('change', function(e, eventName) {
-        propSelect.MPPropertySelect('setEvent', eventName);
-        $("#by").show();
-        $("#propSelect").show();
+        //propSelect.MPPropertySelect('setEvent', eventName);
+        //$("#by").show();
+        //$("#propSelect").show();
+        //distinctIdPicker = $('#distinctIdSelect').MPSelect(idOptions);
         runQuery();
       });
       eventPicker2.on('change', runQuery);
@@ -475,23 +482,137 @@
         runQuery();
       });
 
-      runQuery();
-
     </script>
 
-    <script id='funnel'>
+    <script id='funnel-query'>
     // standard funnel
+    function main() {
+      return Events({
+        from_date: params.from_date,
+        to_date: params.to_date,
+        event_selectors:event_selector(params.events)
+      })
+      .groupByUser(function(state, events){
+        state = state || createState(params.events);
+        _.each(events, function(event){
+          if (event.name == params.events[0]){
+            state[event.name] = 1;
+          } else {
+            for(i=0; i<params.events.length; i++) {
+              if (event.name == params.events[i] && state[params.events[i-1]] == 1) {
+                state[event.name] = 1;
+              }
+            }
+          }
+        });
+        return state;
+      })
+      .map(function(items) {
+        var map = items.value;
+        return map;
+      }).reduce(mixpanel.reducer.object_merge());
+    }
 
+    function createState(events) {
+      var state = {};
+      _.each(events, function(name) {
+        state[name] = 0;
+      });
+      return state;
+    }
+
+    function event_selector(events){
+      var selector = [];
+      _.each(events, function(name){
+        selector.push({event:name});
+      });
+      return selector;
+    }
     </script>
 
     <script id='funnel-unique'>
     // unique event counts of each event in funnel
+    function main() {
+      return Events({
+        from_date: params.from_date,
+        to_date: params.to_date,
+        event_selectors:event_selector(params.events)
+      })
+      .groupByUser(function(state, events) {
+        state = state || createState(params.events);
+        _.each(events, function(event) {
+          state[event.name] = 1;
+        })
+        return state;
+      })
+      .map(function(items) {
+        var map = items.value;
+        return map;
+      }).reduce(mixpanel.reducer.object_merge());
+    }
 
+    function createState(events) {
+      var state = {};
+      _.each(events, function(name) {
+        state[name] = 0;
+      });
+      return state;
+    }
+
+    function event_selector(events){
+      var selector = [];
+      _.each(events, function(name){
+        selector.push({event:name});
+      });
+      return selector;
+    }
     </script>
 
     <script id='funnel-transactional'>
     // transactional funnel
+    function main() {
+      return Events({
+        from_date: params.from_date,
+        to_date: params.to_date,
+        event_selectors:event_selector(params.events)
+      })
+      .groupByUser(function(state, events){
+        state = state || createState(params.events);
+        _.each(events, function(event){
+          count = state[params.events[0]];
+          if (event.name == params.events[0] && state[params.events[params.events.length-1]] == count){
+            state[event.name] += 1;
+          } else {
+            for(i=0; i<params.events.length; i++) {
+              if (event.name == params.events[i] && state[params.events[i-1]] == count && state[params.events[i]] == count-1) {
+                state[event.name] += 1;
+              }
+            }
+          }
+        });
+        return state;
+      })
+      .map(function(items) {
+        var map = items.value;
+        return map;
+      }).reduce(mixpanel.reducer.object_merge());
+    }
 
+    function createState(events) {
+      var state = {};
+      _.each(events, function(name) {
+        state[name] = 0;
+      });
+      return state;
+    }
+
+    function event_selector(events){
+      var selector = [];
+      _.each(events, function(name){
+        selector.push({event:name});
+      });
+      return selector;
+    }
     </script>
 
     <script id='funnel-total'>
@@ -534,24 +655,147 @@
 
     <script id='funnel-custom'>
     // standard funnel by custom id
+    function main() {
+      return Events({
+        //Configure date range
+        from_date: params.from_date,
+        to_date: params.to_date,
+        event_selectors:event_selector(params.events)
+      })
+      .filter(function(event) {
+        return event.properties[params.prop] !== undefined && event.properties[params.prop] !== null;
+      })
+      .groupBy(["properties." + params.prop], function(accumulators, events){
+        var result = {stage:0};
+        _.each(accumulators, function(accumulator){
+          if (result.stage < accumulator.stage){
+            result = accumulator;
+          }
+        });
+        _.each(events, function(event){
+          if (event.name == params.events[result.stage]){
+            result[result.stage] = 1;
+            result.stage++;
+          }
+        });
+        return result;
+      })
+      .map(function(item){
+        delete item.value.stage;
+        var result = {};
+        _.each(item.value, function(value, key){
+          result[params.events[key]] = value;
+        });
+        return result;
+      })
+      .reduce(mixpanel.reducer.object_merge()); 
+    }
 
+    function event_selector(events){
+      var selector = [];
+      _.each(events, function(name){
+        selector.push({event:name});
+      });
+      return selector;
+    }
     </script>
 
     <script id='funnel-custom-unique'>
     // unique event counts by custom id of each event in funnel
+    function main() {
+      return Events({
+        from_date: params.from_date,
+        to_date: params.to_date,
+        event_selectors:event_selector(params.events)
+      })
+      .filter(function(event) {
+        return event.properties[params.prop] !== undefined && event.properties[params.prop] !== null;
+      })
+      .groupBy(["properties." + params.prop, "name"], mixpanel.reducer.count())
+      .map(function(item) {
+        var map = {};
+        _.each(params.events, function(event) {
+          if(item.key[1] == event) {
+            map[event] = 1;//item.value;
+          } else {
+            map[event] = 0;
+          }
+        });
+        return map;
+      }).reduce(mixpanel.reducer.object_merge());
+    }
 
+    function event_selector(events){
+      var selector = [];
+      _.each(events, function(name){
+        selector.push({event:name});
+      });
+      return selector;
+    }
+    
+    function createState(events) {
+      var state = {};
+      _.each(events, function(name) {
+        state[name] = 0;
+      });
+      return state;
+    }
     </script>
 
     <script id='funnel-custom-transactional'>
     // transactional funnel by custom id
+    function main() {
+      return Events({
+        from_date: params.from_date,
+        to_date: params.to_date,
+        event_selectors:event_selector(params.events)
+      })
+      .groupByUser(function(state, events){
+        state = state || createState(params.events);
+        _.each(events, function(event){
+          count = state[params.events[0]];
+          if(state['current'] !== event.properties[params.prop]) {
+            _.each(params.events, function(name) {
+              state[name] = count;
+            });
+            state.current = event.properties[params.prop];
+          }
+          if (event.name == params.events[0] && state[params.events[params.events.length-1]] == count){
+            state[event.name] += 1;
+          } else {
+            for(i=0; i<params.events.length; i++) {
+              if (event.name == params.events[i] && state[params.events[i-1]] == count && state[params.events[i]] == count-1) {
+                state[event.name] += 1;
+              }
+            }
+          }
+        });
+        return state;
+      })
+      .map(function(items) {
+        var map = items.value;
+        delete map.current;
+        return map;
+      }).reduce(mixpanel.reducer.object_merge());
+    }
 
+    function createState(events) {
+      var state = {};
+      _.each(events, function(name) {
+        state[name] = 0;
+      });
+      state['current'] = 0;
+      return state;
+    }
+
+    function event_selector(events){
+      var selector = [];
+      _.each(events, function(name){
+        selector.push({event:name});
+      });
+      return selector;
+    }
     </script>
-
-    <script id='funnel-custom-total'>
-    // total event counts by custom id of each event in funnel
-
-    </script>
-
 
   </body>
 </html>
