@@ -331,30 +331,24 @@
 
           console.log(id);
 
-          var sortOrder = false;
-
           // want to decide upon a query based on the inputted dropdown values
           // NOTE: custom time property not currently included
           if(id == 'distinct_id' && time == 'time' && attempt == 'unique' && order == 'ordered') { // standard funnel
             var script = document.getElementById('funnel-query').innerHTML; 
           } else if(id == 'distinct_id' && time == 'time' && attempt == 'unique' && order !== 'ordered') { // unique event counts of each event in funnel
             var script = document.getElementById('funnel-unique').innerHTML;
-            sortOrder = true;
           } else if(id == 'distinct_id' && time == 'time' && attempt !== 'unique' && order == 'ordered') { // transactional funnel
             var script = document.getElementById('funnel-transactional').innerHTML;
           } else if(id == 'distinct_id' && time == 'time' && attempt !== 'unique' && order !== 'ordered') { // total event counts of each event in funnel
             var script = document.getElementById('funnel-total').innerHTML;
-            sortOrder = true;
           } else if(id !== 'distinct_id' && time == 'time' && attempt == 'unique' && order == 'ordered') { // standard funnel by custom id
             var script = document.getElementById('funnel-custom').innerHTML;
           } else if(id !== 'distinct_id' && time == 'time' && attempt == 'unique' && order !== 'ordered') { // unique event counts by custom id of each event in funnel
             var script = document.getElementById('funnel-custom-unique').innerHTML;
-            sortOrder = true;
           } else if(id !== 'distinct_id' && time == 'time' && attempt !== 'unique' && order == 'ordered') { // transactional funnel by custom id
             var script = document.getElementById('funnel-custom-transactional').innerHTML;
           } else if(id !== 'distinct_id' && time == 'time' && attempt !== 'unique' && order !== 'ordered') { // total event counts by custom id of each event in funnel
             var script = document.getElementById('funnel-total').innerHTML;
-            sortOrder = true;
           }
 
           console.log(params);
@@ -375,11 +369,7 @@
               }
               j++;
             });
-            if(sortOrder) {
-              var ratio = calculateGraphRatio(jqlResult[maxCount].count);
-            } else {
-              var ratio = calculateGraphRatio(jqlResult[0].count);
-            }
+            var ratio = calculateGraphRatio(jqlResult[maxCount].count);
             for (var i = 0; i < eventsJQL.length; i++) {
               var first = i == 0 ? true : false;
               if (first) {
@@ -412,7 +402,7 @@
         // append converted and dropped sections of funnel bar, event label
         var dropped = first ? '' : dropped;
         var funnelStep = $('<div class="funnel-step"></div>').appendTo(funnelGraph);
-        $('<div class="dropped">' + dropped + '</div>').css({'height': dropped*ratio + 'px', 'line-height': dropped*ratio + 'px'}).appendTo(funnelStep);
+        $('<div class="dropped">' + Math.abs(dropped) + '</div>').css({'height': dropped*ratio + 'px', 'line-height': dropped*ratio + 'px'}).appendTo(funnelStep);
         $('<div class="converted">' + converted + '</div>').css({'height': converted*ratio + 'px', 'line-height': converted*ratio + 'px'}).appendTo(funnelStep).addClass(first);
         $('<div class="column-label" title="' + eventName + '">' + eventName + '</div>').appendTo(funnelStep);
       }
