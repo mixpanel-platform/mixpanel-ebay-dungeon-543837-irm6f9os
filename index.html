@@ -218,7 +218,7 @@
         ]
       };
 
-      MP.api.topProperties('App launch').done(function(results) {
+      MP.api.topProperties('Homepage Viewed').done(function(results) {
         var props = Object.keys(results.values());
         for(i=0; i<props.length; i++) {
           idOptions.items.push({label: props[i], value: props[i]});
