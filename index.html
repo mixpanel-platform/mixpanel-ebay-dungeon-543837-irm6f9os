@@ -163,10 +163,6 @@
 
     <script>
 
-      //debug
-      //MP.api.setCredentials("7a66766fb54b8f77ba03ada28b0bfb1f");
-      //MP.api.setCredentials("fb5cd548015d767999059038755ce6b3");
-
       var dateSelect  = $('#dateSelect').MPDatepicker();
       var eventPicker1 = $('#eventSelect1').MPEventSelect();
       var eventPicker2 = $('#eventSelect2').MPEventSelect();
@@ -232,9 +228,6 @@
         distinctIdPicker.on('change', runQuery);
         runQuery();
       });
-
-      //var distinctIdPicker = $('#distinctIdSelect').MPSelect(idOptions);
-      //console.log(distinctIdPicker);
 
       var timeOptions = {
         items: [
@@ -342,6 +335,7 @@
             sortOrder = true;
           } else if(id == 'distinct_id' && time == 'time' && attempt !== 'unique' && order == 'ordered') { // transactional funnel
             var script = document.getElementById('funnel-transactional').innerHTML;
+            sortOrder = true;
           } else if(id == 'distinct_id' && time == 'time' && attempt !== 'unique' && order !== 'ordered') { // total event counts of each event in funnel
             var script = document.getElementById('funnel-total').innerHTML;
             sortOrder = true;
@@ -375,11 +369,7 @@
               }
               j++;
             });
-            if(sortOrder) {
-              var ratio = calculateGraphRatio(jqlResult[maxCount].count);
-            } else {
-              var ratio = calculateGraphRatio(jqlResult[0].count);
-            }
+            var ratio = calculateGraphRatio(jqlResult[maxCount].count);
             for (var i = 0; i < eventsJQL.length; i++) {
               var first = i == 0 ? true : false;
               if (first) {
@@ -412,7 +402,7 @@
         // append converted and dropped sections of funnel bar, event label
         var dropped = first ? '' : dropped;
         var funnelStep = $('<div class="funnel-step"></div>').appendTo(funnelGraph);
-        $('<div class="dropped">' + dropped + '</div>').css({'height': dropped*ratio + 'px', 'line-height': dropped*ratio + 'px'}).appendTo(funnelStep);
+        $('<div class="dropped">' + Math.abs(dropped) + '</div>').css({'height': dropped*ratio + 'px', 'line-height': dropped*ratio + 'px'}).appendTo(funnelStep);
         $('<div class="converted">' + converted + '</div>').css({'height': converted*ratio + 'px', 'line-height': converted*ratio + 'px'}).appendTo(funnelStep).addClass(first);
         $('<div class="column-label" title="' + eventName + '">' + eventName + '</div>').appendTo(funnelStep);
       }
